@@ -22,7 +22,8 @@ class SVAutoHatch(ImageProcPythonCommand):
         self.duration_base = 0.5
         # 動作安定化(各waitの待ち時間に追加する)
         self.add_time = 0
-        # そらをとぶモード(その場: 1、移動: 2)
+        # そらをとぶモード(その場: 1、調整: 2)
+        # 1を選ぶ場合は一度そらをとぶでゼロゲートに飛んでから開始してください
         self.fly_mode = 1
         # 孵化BOX数
         self.box_cnt = None
@@ -78,7 +79,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         サンドイッチ(スーパーピーナッツバターサンド)作成
         '''
-        print('サンドイッチを作ります') if self.debug_mode else ''
+        print('make_sandwich start') if self.debug_mode else ''
         # メインメニューでピクニックを選択する
         self.press(Button.X, duration=0.1, wait=self.add_time+2)
         self.select_main_menu('picnic')
@@ -172,7 +173,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         Parameters
             receive: 最大タマゴ受け取り数
         '''
-        print('タマゴ受け取りを開始') if self.debug_mode else ''
+        print('get_egg start') if self.debug_mode else ''
         # 移動安定のためにしゃがむ
         self.press(Button.B, duration=0.1, wait=self.add_time+1)
         # 左へ
@@ -237,7 +238,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         Parameters
             next_box_cnt: 孵化するBOXの位置
         '''
-        print('孵化開始') if self.debug_mode else ''
+        print('hatch_egg start') if self.debug_mode else ''
         self.wait(self.add_time+1)
         # BOXを開く
         self.press(Button.X, duration=0.1, wait=self.add_time+2)
@@ -438,6 +439,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         手持ち空きポケモン数を確認
         '''
+        print('check_free_space_on_hand start') if self.debug_mode else ''
         if self.isContainTemplate(template_path=self.base_img_path+"free_space_on_hand3.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
             self.poke_cnt = 3
         if self.isContainTemplate(template_path=self.base_img_path+"free_space_on_hand4.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
@@ -452,6 +454,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         print(f'現在の手持ち空き数: {self.poke_cnt}') if self.debug_mode else ''
 
     def select_main_menu(self, menu_name: str):
+        print('select_main_menu start') if self.debug_mode else ''
         '''
         メインメニューで指定のメニューを選択して開く
 
@@ -459,10 +462,13 @@ class SVAutoHatch(ImageProcPythonCommand):
             menu_name: メニュー画像名(拡張子を除く)
         '''
         if self.isContainTemplate(template_path=self.base_img_path+"main_menu.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
-            self.press(Direction.RIGHT, duration=0.1, wait=self.add_time+0.2)
+            self.press(Direction.RIGHT, duration=0.1, wait=self.add_time+0.3)
             while(1):
                 if self.isContainTemplate(template_path=self.base_img_path+menu_name+".png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
                     self.press(Button.A, duration=0.1, wait=self.add_time+5)
+                    # うまく反応しない場合があるのでもうメインメニューが表示されていたら一度呼び出してリカバリー
+                    if self.isContainTemplate(template_path=self.base_img_path+"main_menu.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
+                        self.select_main_menu(menu_name)
                     break
                 else:
                     self.press(Direction.DOWN, duration=0.1,
@@ -477,6 +483,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         立ち位置、方角を調整
         '''
+        print('adjustment_position start') if self.debug_mode else ''
         if self.isContainTemplate(template_path=self.base_img_path+"east_direction.png", threshold=0.8, use_gray=False, show_value=self.debug_mode):
             print('ゼロゲート(地上)、東向きを認識しました。') if self.debug_mode else ''
             self.press(Direction.DOWN_LEFT, duration=0.1,
@@ -504,6 +511,7 @@ class SVAutoHatch(ImageProcPythonCommand):
             self.finish()
 
     def standing_position_reset(self):
+        print('standing_position_reset start') if self.debug_mode else ''
         '''
         そらを飛ぶで立ち位置をリセット
         '''
@@ -511,11 +519,12 @@ class SVAutoHatch(ImageProcPythonCommand):
         self.press(Button.ZL, duration=0.1, wait=self.add_time+1)
         if self.fly_mode == 1:
             # そらをとぶ
-            self.press(Button.A, duration=0.1, wait=self.add_time+2)
-            if self.isContainTemplate(template_path=self.base_img_path+"fly.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
-                self.press(Button.A, duration=0.1, wait=self.add_time+2)
-                self.press(Button.A, duration=0.1, wait=self.add_time+5)
-                break
+            for i in range(30):
+                self.press(Button.A, duration=0.1, wait=self.add_time+1)
+                if self.isContainTemplate(template_path=self.base_img_path+"fly.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
+                    self.press(Button.A, duration=0.1, wait=self.add_time+2)
+                    self.press(Button.A, duration=0.1, wait=self.add_time+5)
+                    return
         elif self.fly_mode == 2:
             # 位置調整準備
             if self.isContainTemplate(template_path=self.base_img_path+"map_r.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
@@ -525,8 +534,8 @@ class SVAutoHatch(ImageProcPythonCommand):
                 # そらをとぶ
                 if self.isContainTemplate(template_path=self.base_img_path+"fly.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
                     self.press(Button.A, duration=0.1, wait=self.add_time+2)
-                    self.press(Button.A, duration=0.1, wait=self.add_time+5)
-                    break
+                    self.press(Button.A, duration=0.1, wait=self.add_time+10)
+                    return
                 # 位置調整
                 self.press(Direction.DOWN, duration=0.1, wait=self.add_time+1)
                 self.press(Direction.UP, duration=0.1, wait=self.add_time+1)
@@ -539,6 +548,7 @@ class SVAutoHatch(ImageProcPythonCommand):
             self.finish()
 
     def recovery(self):
+        print('recovery start') if self.debug_mode else ''
         '''
         メインメニューを閉じた状態までリカバリー
         '''
@@ -553,6 +563,7 @@ class SVAutoHatch(ImageProcPythonCommand):
             self.standing_position_reset()
 
     def get_screenshot(self, filename):
+        print('get_screenshot start') if self.debug_mode else ''
         '''
         スクリーンショット保存
         /SerialController/Captures/SVAutoHatch/ に保存されます
@@ -571,6 +582,7 @@ class SVAutoHatch(ImageProcPythonCommand):
             lable: 説明文
             func: ボタン押下時に呼び出す関数
         '''
+        print('gui_window_generate start') if self.debug_mode else ''
         # 入力画面
         self.Window = tk.Toplevel()
         self.Window.geometry(size)
@@ -593,6 +605,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         BOX数決定
         '''
+        print('box_cnt_decision start') if self.debug_mode else ''
         try:
             input = self.entry.get()
             self.box_cnt = int(input) if not input == '' else 1
