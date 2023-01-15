@@ -16,7 +16,7 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         super().__init__(cam)
         # 動作確認用(通常時はFalse、Trueにすると様々なログ出力が増えます)
-        self.debug_mode = True
+        self.debug_mode = False
         # 調理移動量(環境によって0.4~0.6程度で調整)
         self.duration_base = 0.5
         # 動作安定化(各waitの待ち時間に追加する)
@@ -293,7 +293,7 @@ class SVAutoHatch(ImageProcPythonCommand):
             # boxを閉じる
             self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
             self.wait(self.add_time+1)
-            self.press(Button.B, duration=0.1, wait=self.add_time+1)
+            self.press(Button.B, duration=0.1, wait=self.add_time+4)
 
             print(f"孵化開始({j}/6セット目)")
             self.press(Button.PLUS, 0.1, wait=self.add_time+0.5)
