@@ -4,6 +4,7 @@
 from Commands.PythonCommandBase import ImageProcPythonCommand
 from Commands.Keys import Button, Direction
 import tkinter as tk
+import datetime
 
 
 class SVAutoHatch(ImageProcPythonCommand):
@@ -102,7 +103,8 @@ class SVAutoHatch(ImageProcPythonCommand):
                 self.press(Button.A, duration=0.1, wait=self.add_time+0.5)
                 break
             else:
-                self.press(Direction.RIGHT, duration=0.1, wait=self.add_time+0.3)
+                self.press(Direction.RIGHT, duration=0.1,
+                           wait=self.add_time+0.3)
 
         # クッキング開始待ち
         while(1):
@@ -113,27 +115,33 @@ class SVAutoHatch(ImageProcPythonCommand):
 
         self.wait(self.add_time+1)
         # 1枚目を置く
-        self.press(Direction.UP, duration=self.duration_base+0.05, wait=self.add_time+0.5)
+        self.press(Direction.UP, duration=self.duration_base +
+                   0.05, wait=self.add_time+0.5)
         self.hold(Button.A, wait=self.add_time+0.5)
-        self.press(Direction.DOWN, duration=self.duration_base, wait=self.add_time+0.5)
+        self.press(Direction.DOWN, duration=self.duration_base,
+                   wait=self.add_time+0.5)
         if not self.isContainTemplate(template_path=self.base_img_path+"bananaslice.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
             print('食材を掴めませんでした')
             print('err_code: E0005')
             self.get_screenshot('E0005')
         self.holdEnd(Button.A)
         # 2枚目を置く
-        self.press(Direction.UP, duration=self.duration_base, wait=self.add_time+0.5)
+        self.press(Direction.UP, duration=self.duration_base,
+                   wait=self.add_time+0.5)
         self.hold(Button.A, wait=self.add_time+0.5)
-        self.press(Direction.DOWN, duration=self.duration_base, wait=self.add_time+0.5)
+        self.press(Direction.DOWN, duration=self.duration_base,
+                   wait=self.add_time+0.5)
         if not self.isContainTemplate(template_path=self.base_img_path+"bananaslice.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
             print('食材を掴めませんでした')
             print('err_code: E0006')
             self.get_screenshot('E0006')
         self.holdEnd(Button.A)
         # 3枚目を置く
-        self.press(Direction.UP, duration=self.duration_base, wait=self.add_time+0.5)
+        self.press(Direction.UP, duration=self.duration_base,
+                   wait=self.add_time+0.5)
         self.hold(Button.A, wait=self.add_time+0.5)
-        self.press(Direction.DOWN, duration=self.duration_base, wait=self.add_time+0.5)
+        self.press(Direction.DOWN, duration=self.duration_base,
+                   wait=self.add_time+0.5)
         self.press(Direction.LEFT, duration=0.2, wait=self.add_time+0.5)
         if not self.isContainTemplate(template_path=self.base_img_path+"bananaslice.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
             print('食材を掴めませんでした')
@@ -194,19 +202,24 @@ class SVAutoHatch(ImageProcPythonCommand):
                 if receive <= receive_cnt:
                     # タマゴを必要数受け取ったのでアカデミーに寄贈する
                     if self.isContainTemplate(template_path=self.base_img_path+"gift.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
-                        self.press(Button.A, duration=0.1, wait=self.add_time+0.5)
-                        self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
+                        self.press(Button.A, duration=0.1,
+                                   wait=self.add_time+0.5)
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
                     # タマゴを必要数受け取ってバスケットの中が空になった
                     if self.isContainTemplate(template_path=self.base_img_path+"no_egg.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
-                        self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
                         print(f'バスケットの中身が空になりました') if self.debug_mode else ''
                         break
                 else:
                     # タマゴを引き取った
                     if self.isContainTemplate(template_path=self.base_img_path+"accepting.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
-                        self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
                         receive_cnt += 1
-                        print(f'{receive_cnt}/{receive} 個目のタマゴを受け取りました') if self.debug_mode else ''
+                        print(
+                            f'{receive_cnt}/{receive} 個目のタマゴを受け取りました') if self.debug_mode else ''
                 self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
 
         print('ピクニック終了') if self.debug_mode else ''
@@ -261,32 +274,44 @@ class SVAutoHatch(ImageProcPythonCommand):
         for j in range(1, 7):
             # 次の列へ移動
             for i in range(j-1):
-                self.press(Direction.RIGHT, duration=0.1, wait=self.add_time+0.3)
+                self.press(Direction.RIGHT, duration=0.1,
+                           wait=self.add_time+0.3)
             # 手持ち空き数に合わせてタマゴを選択
             if self.poke_cnt == 4:
                 self.press(Button.MINUS, duration=0.1, wait=self.add_time+0.5)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
                 self.press(Button.A, duration=0.1, wait=self.add_time+0.2)
             elif self.poke_cnt == 5:
                 self.press(Button.MINUS, duration=0.1, wait=self.add_time+0.5)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
                 self.press(Button.A, duration=0.1, wait=self.add_time+0.2)
             else:
                 pass
             # 手持ちまで移動
             for i in range(j):
-                self.press(Direction.LEFT, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.LEFT, duration=0.1,
+                           wait=self.add_time+0.2)
             # 手持ち空き数に合わせてタマゴを手持ちに加える
             if self.poke_cnt == 4:
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
             elif self.poke_cnt == 5:
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
             else:
                 pass
             self.press(Button.A, duration=0.1, wait=self.add_time+0.2)
@@ -320,31 +345,44 @@ class SVAutoHatch(ImageProcPythonCommand):
             self.select_main_menu('box')
             # 手持ち空き数に合わせて手持ちの孵化したポケモンを選択
             if self.poke_cnt == 4:
-                self.press(Direction.LEFT, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.LEFT, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
                 self.press(Button.MINUS, duration=0.1, wait=self.add_time+0.5)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
                 self.press(Button.A, duration=0.1, wait=self.add_time+0.2)
                 self.press(Direction.UP, duration=0.1, wait=self.add_time+0.2)
                 self.press(Direction.UP, duration=0.1, wait=self.add_time+0.2)
             elif self.poke_cnt == 5:
-                self.press(Direction.LEFT, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.LEFT, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
                 self.press(Button.MINUS, duration=0.1, wait=self.add_time+0.5)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
-                self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
+                self.press(Direction.DOWN, duration=0.1,
+                           wait=self.add_time+0.2)
                 self.press(Button.A, duration=0.1, wait=self.add_time+0.2)
                 self.press(Direction.UP, duration=0.1, wait=self.add_time+0.2)
             else:
                 pass
             # 次の列へ移動
             for i in range(j):
-                self.press(Direction.RIGHT, duration=0.1, wait=self.add_time+0.2)
+                self.press(Direction.RIGHT, duration=0.1,
+                           wait=self.add_time+0.2)
             self.press(Button.A, duration=0.1, wait=self.add_time+0.5)
             self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
             self.wait(self.add_time+4)
@@ -425,7 +463,8 @@ class SVAutoHatch(ImageProcPythonCommand):
                     self.press(Button.A, duration=0.1, wait=self.add_time+5)
                     break
                 else:
-                    self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.2)
+                    self.press(Direction.DOWN, duration=0.1,
+                               wait=self.add_time+0.2)
         else:
             print('メインメニューが検出できなかったため処理を中断します')
             print('err_code: E0004')
@@ -438,11 +477,13 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         if self.isContainTemplate(template_path=self.base_img_path+"east_direction.png", threshold=0.8, use_gray=False, show_value=self.debug_mode):
             print('ゼロゲート(地上)、東向きを認識しました。') if self.debug_mode else ''
-            self.press(Direction.DOWN_LEFT, duration=0.1, wait=self.add_time+0.5)
+            self.press(Direction.DOWN_LEFT, duration=0.1,
+                       wait=self.add_time+0.5)
             self.press(Button.L, duration=0.1, wait=self.add_time+0.5)
         elif self.isContainTemplate(template_path=self.base_img_path+"west_direction.png", threshold=0.8, use_gray=False, show_value=self.debug_mode):
             print('ゼロゲート(地上)、西向きを認識しました。') if self.debug_mode else ''
-            self.press(Direction.UP_RIGHT, duration=0.1, wait=self.add_time+0.5)
+            self.press(Direction.UP_RIGHT, duration=0.1,
+                       wait=self.add_time+0.5)
             self.press(Button.L, duration=0.1, wait=self.add_time+0.5)
         else:
             print('立ち位置と方角の調整に失敗したため処理を中断します。')
@@ -493,7 +534,8 @@ class SVAutoHatch(ImageProcPythonCommand):
         /SerialController/Captures/SVAutoHatch/ に保存されます
         '''
         img_path = 'SVAutoHatch/'
-        self.camera.saveCapture(img_path+filename)
+        d = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        self.camera.saveCapture(f'{img_path}{filename}_{d}')
 
     def gui_window_generate(self, size: str, title: str, label: str, func: str):
         '''
@@ -515,7 +557,8 @@ class SVAutoHatch(ImageProcPythonCommand):
         self.label = tk.Label(self.frame, text=label)
         self.entry = tk.Entry(self.frame)
         if func == 'box_cnt_decision':
-            self.button = tk.Button(self.frame, text='決定', command=self.box_cnt_decision)
+            self.button = tk.Button(
+                self.frame, text='決定', command=self.box_cnt_decision)
         else:
             pass
         self.entry.pack()
