@@ -5,17 +5,20 @@ from Commands.PythonCommandBase import ImageProcPythonCommand
 from Commands.Keys import Button, Direction
 import tkinter as tk
 import datetime
+import cv2
 
 
 class SVAutoHatch(ImageProcPythonCommand):
     NAME = '【SV】自動孵化【_cttr】'
 
-    def __init__(self, cam):
+    def __init__(self, cam, gui=None):
         '''
         コンストラクタ
         初期設定を行います
         '''
         super().__init__(cam)
+        self.cam = cam
+        self.gui = gui
         # 動作確認用(通常時はFalse、Trueにすると様々なログ出力が増えます)
         self.debug_mode = False
         # 調理移動量(環境によって0.4~0.6程度で調整)
@@ -45,7 +48,6 @@ class SVAutoHatch(ImageProcPythonCommand):
             size='280x80', title='孵化BOX数指定', label='整数で指定してください', func='box_cnt_decision')
 
         # 最初に手持ちを確認して一回に孵化させる数を決める
-        self.press(Button.X, duration=0.1, wait=self.add_time+2)
         self.select_main_menu('box')
         self.check_free_space_on_hand()
         # ポケモンを入れ替える前のため入れ替え後の数に調整する
@@ -81,7 +83,6 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         print('make_sandwich start') if self.debug_mode else ''
         # メインメニューでピクニックを選択する
-        self.press(Button.X, duration=0.1, wait=self.add_time+2)
         self.select_main_menu('picnic')
 
         # ピクニック開始待ち
@@ -204,7 +205,17 @@ class SVAutoHatch(ImageProcPythonCommand):
             for j in range(100):
                 if receive <= receive_cnt:
                     # タマゴを必要数受け取ったのでアカデミーに寄贈する
-                    if self.isContainTemplate(template_path=self.base_img_path+"gift.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
+                    if self.isContainTemplate(template_path=self.base_img_path+"egg_in.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
+                        self.press(Button.B, duration=0.1,
+                                   wait=self.add_time+0.5)
                         self.press(Button.A, duration=0.1,
                                    wait=self.add_time+0.5)
                         self.press(Button.B, duration=0.1,
@@ -216,6 +227,7 @@ class SVAutoHatch(ImageProcPythonCommand):
                         print(f'バスケットの中身が空になりました') if self.debug_mode else ''
                         break
                 else:
+                    self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
                     # タマゴを引き取った
                     if self.isContainTemplate(template_path=self.base_img_path+"accepting.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
                         self.press(Button.B, duration=0.1,
@@ -223,7 +235,6 @@ class SVAutoHatch(ImageProcPythonCommand):
                         receive_cnt += 1
                         print(
                             f'{receive_cnt}/{receive} 個目のタマゴを受け取りました') if self.debug_mode else ''
-                self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
 
         print('ピクニック終了') if self.debug_mode else ''
         self.press(Button.Y, duration=0.1, wait=self.add_time+1)
@@ -231,22 +242,22 @@ class SVAutoHatch(ImageProcPythonCommand):
         self.press(Button.A, duration=0.1, wait=self.add_time+1)
         self.press(Button.L, duration=0.1, wait=self.add_time+0.5)
 
-    def hatch_egg(self, next_box_cnt: int):
+    def hatch_egg(self, next_box_cnt: int = 30):
         '''
         孵化
 
         Parameters
-            next_box_cnt: 孵化するBOXの位置
+            next_box_cnt: 孵化するBOXの位置(初期値30)
         '''
         print('hatch_egg start') if self.debug_mode else ''
         self.wait(self.add_time+1)
         # BOXを開く
-        self.press(Button.X, duration=0.1, wait=self.add_time+2)
         self.select_main_menu('box')
 
         # 手持ち空き数に合わせて孵化用とほのおのからだポケモンを入れ替える
+        for i in range(1, next_box_cnt):
+            self.press(Button.L, duration=0.1, wait=self.add_time+0.5)
         if self.poke_cnt == 4:
-            self.press(Button.L, duration=0.1, wait=self.add_time+0.2)
             self.press(Button.Y, duration=0.1, wait=self.add_time+0.2)
             self.press(Direction.LEFT, duration=0.1, wait=self.add_time+0.2)
             self.press(Direction.DOWN, duration=0.1)
@@ -258,7 +269,6 @@ class SVAutoHatch(ImageProcPythonCommand):
             self.press(Button.Y, duration=0.1, wait=self.add_time+0.2)
             self.press(Direction.UP, duration=0.1)
         elif self.poke_cnt == 5:
-            self.press(Button.L, duration=0.1, wait=self.add_time+0.2)
             self.press(Button.Y, duration=0.1, wait=self.add_time+0.2)
             self.press(Direction.LEFT, duration=0.1, wait=self.add_time+0.2)
             self.press(Button.Y, duration=0.1, wait=self.add_time+0.2)
@@ -428,8 +438,9 @@ class SVAutoHatch(ImageProcPythonCommand):
             self.press(Button.Y, duration=0.1, wait=self.add_time+0.2)
         else:
             pass
-        # 孵化1BOX目に合わせて閉じる
-        self.press(Button.R, duration=0.1, wait=self.add_time+0.5)
+        # 次タマゴを入れるBOXに合わせて閉じる
+        for i in range(1, next_box_cnt+1):
+            self.press(Button.R, duration=0.1, wait=self.add_time+0.5)
         self.press(Button.B, duration=0.1, wait=self.add_time+0.5)
         self.wait(self.add_time+4)
         self.press(Direction.DOWN, duration=0.1, wait=self.add_time+0.5)
@@ -454,13 +465,20 @@ class SVAutoHatch(ImageProcPythonCommand):
         print(f'現在の手持ち空き数: {self.poke_cnt}') if self.debug_mode else ''
 
     def select_main_menu(self, menu_name: str):
-        print('select_main_menu start') if self.debug_mode else ''
         '''
         メインメニューで指定のメニューを選択して開く
 
         Parameters
             menu_name: メニュー画像名(拡張子を除く)
         '''
+        print('select_main_menu start') if self.debug_mode else ''
+        self.wait(2)
+        mc_result = self.detect_circular_minimap(search_range=[494, 720, 1050, 1280], circle_radius=80,  return_info=False)
+        if mc_result:
+            self.press(Button.X, duration=0.1, wait=self.add_time+2)
+            self.select_main_menu(menu_name)
+            return
+
         if self.isContainTemplate(template_path=self.base_img_path+"main_menu.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
             self.press(Direction.RIGHT, duration=0.1, wait=self.add_time+0.3)
             while(1):
@@ -522,6 +540,7 @@ class SVAutoHatch(ImageProcPythonCommand):
             for i in range(30):
                 self.press(Button.A, duration=0.1, wait=self.add_time+1)
                 if self.isContainTemplate(template_path=self.base_img_path+"fly.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
+                    print('そらをとぶを認識しました') if self.debug_mode else ''
                     self.press(Button.A, duration=0.1, wait=self.add_time+2)
                     self.press(Button.A, duration=0.1, wait=self.add_time+5)
                     return
@@ -533,6 +552,7 @@ class SVAutoHatch(ImageProcPythonCommand):
             for i in range(30):
                 # そらをとぶ
                 if self.isContainTemplate(template_path=self.base_img_path+"fly.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
+                    print('そらをとぶを認識しました') if self.debug_mode else ''
                     self.press(Button.A, duration=0.1, wait=self.add_time+2)
                     self.press(Button.A, duration=0.1, wait=self.add_time+10)
                     return
@@ -567,6 +587,9 @@ class SVAutoHatch(ImageProcPythonCommand):
         '''
         スクリーンショット保存
         /SerialController/Captures/SVAutoHatch/ に保存されます
+
+        Parameters
+            filename: ファイル名
         '''
         img_path = 'SVAutoHatch/'
         d = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -612,3 +635,33 @@ class SVAutoHatch(ImageProcPythonCommand):
         except ValueError:
             self.box_cnt = 1
         self.Window.destroy()
+
+    def detect_circular_minimap(self, search_range: list = [0, 720, 0, 1280], circle_radius: int = 80, return_info: bool = False):
+        '''
+        ミニマップの円形を検出する
+
+        Parameters
+            search_range: ファイル名
+            circle_radius: 円の半径
+            return_info: 検出結果として円の情報を受取る場合はTrue、検出結果をbool値で受け取るならFalse
+        '''
+        # 映像を読み込む
+        cap = self.camera.readFrame()
+        # グレースケール変換 (白・灰色・黒色で構成されている画像)
+        cap = cv2.cvtColor(cap, cv2.COLOR_BGR2GRAY)
+        # 対象の範囲をトリミング
+        img = cap[search_range[0]:search_range[1],
+                  search_range[2]:search_range[3]]
+        # 円検出
+        circles = None
+        circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, dp=1, minDist=20,
+                                   param1=100, param2=60, minRadius=circle_radius, maxRadius=0)
+        # 円が見つからなかった場合の処理
+        if circles is None:
+            return (0, 0, 0) if return_info else False
+        # 検出した円の半径とcircle_radiusを比較
+        if circles[0][0][2] > circle_radius:
+            print('ミニマップを検出しました') if self.debug_mode else ''
+            return (circles[0][0][0], circles[0][0][1], circles[0][0][2]) if return_info else True
+        else:
+            return (0, 0, 0) if return_info else False
