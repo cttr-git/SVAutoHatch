@@ -192,7 +192,8 @@ class SVAutoHatch(ImageProcPythonCommand):
         receive_cnt = 0
         for i in range(1, 4):
             print('タマゴ待ち') if self.debug_mode else ''
-            self.wait(receive*10+self.add_time)
+            # 最大タマゴ受け取り数*12秒
+            self.wait(receive*12+self.add_time)
             # 受け取り
             self.press(Button.A, duration=0.1, wait=1+self.add_time)
             if not self.isContainTemplate(template_path=self.base_img_path+"look.png", threshold=0.9, use_gray=True, show_value=self.debug_mode):
