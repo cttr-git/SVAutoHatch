@@ -120,35 +120,35 @@ class SVAutoHatch(ImageProcPythonCommand):
         self.press(Direction.UP, duration=self.duration_base +
                    0.05, wait=0.5+self.add_time)
         self.hold(Button.A, wait=0.5+self.add_time)
-        self.press(Direction.DOWN, duration=self.duration_base,
-                   wait=0.5+self.add_time)
         if not self.isContainTemplate(template_path=self.base_img_path+"bananaslice.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
             print('食材を掴めませんでした')
             print('err_code: E0005')
             self.get_screenshot('E0005')
+        self.press(Direction.DOWN, duration=self.duration_base,
+                   wait=0.5+self.add_time)
         self.holdEnd(Button.A)
         # 2枚目を置く
         self.press(Direction.UP, duration=self.duration_base,
                    wait=0.5+self.add_time)
         self.hold(Button.A, wait=0.5+self.add_time)
-        self.press(Direction.DOWN, duration=self.duration_base,
-                   wait=0.5+self.add_time)
         if not self.isContainTemplate(template_path=self.base_img_path+"bananaslice.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
             print('食材を掴めませんでした')
             print('err_code: E0006')
             self.get_screenshot('E0006')
+        self.press(Direction.DOWN, duration=self.duration_base,
+                   wait=0.5+self.add_time)
         self.holdEnd(Button.A)
         # 3枚目を置く
         self.press(Direction.UP, duration=self.duration_base,
                    wait=0.5+self.add_time)
         self.hold(Button.A, wait=0.5+self.add_time)
-        self.press(Direction.DOWN, duration=self.duration_base,
-                   wait=0.5+self.add_time)
-        self.press(Direction.LEFT, duration=0.2, wait=0.5+self.add_time)
         if not self.isContainTemplate(template_path=self.base_img_path+"bananaslice.png", threshold=0.9, use_gray=False, show_value=self.debug_mode):
             print('食材を掴めませんでした')
             print('err_code: E0007')
             self.get_screenshot('E0007')
+        self.press(Direction.DOWN, duration=self.duration_base,
+                   wait=0.5+self.add_time)
+        self.press(Direction.LEFT, duration=0.2, wait=0.5+self.add_time)
         self.holdEnd(Button.A)
         self.wait(3+self.add_time)
         # パンを捨てる
@@ -270,24 +270,24 @@ class SVAutoHatch(ImageProcPythonCommand):
         for i in range(1, next_box_cnt):
             self.press(Button.L, duration=0.1, wait=0.5+self.add_time)
         if self.poke_cnt == 4:
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.LEFT, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.LEFT, duration=0.1, wait=0.4+self.add_time)
             self.press(Direction.DOWN, duration=0.1)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.DOWN, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.RIGHT, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.DOWN, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.RIGHT, duration=0.1, wait=0.4+self.add_time)
             self.press(Direction.UP, duration=0.1)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
             self.press(Direction.UP, duration=0.1)
         elif self.poke_cnt == 5:
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.LEFT, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.DOWN, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.RIGHT, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.LEFT, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.DOWN, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.RIGHT, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
         else:
             pass
 
@@ -300,46 +300,46 @@ class SVAutoHatch(ImageProcPythonCommand):
             # 次の列へ移動
             for i in range(j-1):
                 self.press(Direction.RIGHT, duration=0.1,
-                           wait=0.3+self.add_time)
+                           wait=0.4+self.add_time)
             # 手持ち空き数に合わせてタマゴを選択
             if self.poke_cnt == 4:
                 self.press(Button.MINUS, duration=0.1, wait=0.5+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
-                self.press(Button.A, duration=0.1, wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
+                self.press(Button.A, duration=0.1, wait=0.4+self.add_time)
             elif self.poke_cnt == 5:
                 self.press(Button.MINUS, duration=0.1, wait=0.5+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
-                self.press(Button.A, duration=0.1, wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
+                self.press(Button.A, duration=0.1, wait=0.4+self.add_time)
             else:
                 pass
             # 手持ちまで移動
             for i in range(j):
                 self.press(Direction.LEFT, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
             # 手持ち空き数に合わせてタマゴを手持ちに加える
             if self.poke_cnt == 4:
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
             elif self.poke_cnt == 5:
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
             else:
                 pass
-            self.press(Button.A, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.A, duration=0.1, wait=0.4+self.add_time)
             # boxを閉じる
             self.press(Button.B, duration=0.1, wait=0.5+self.add_time)
             self.wait(1+self.add_time)
@@ -371,37 +371,37 @@ class SVAutoHatch(ImageProcPythonCommand):
             # 手持ち空き数に合わせて手持ちの孵化したポケモンを選択
             if self.poke_cnt == 4:
                 self.press(Direction.LEFT, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Button.MINUS, duration=0.1, wait=0.5+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
-                self.press(Button.A, duration=0.1, wait=0.2+self.add_time)
-                self.press(Direction.UP, duration=0.1, wait=0.2+self.add_time)
-                self.press(Direction.UP, duration=0.1, wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
+                self.press(Button.A, duration=0.1, wait=0.4+self.add_time)
+                self.press(Direction.UP, duration=0.1, wait=0.4+self.add_time)
+                self.press(Direction.UP, duration=0.1, wait=0.4+self.add_time)
             elif self.poke_cnt == 5:
                 self.press(Direction.LEFT, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Button.MINUS, duration=0.1, wait=0.5+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
                 self.press(Direction.DOWN, duration=0.1,
-                           wait=0.2+self.add_time)
-                self.press(Button.A, duration=0.1, wait=0.2+self.add_time)
-                self.press(Direction.UP, duration=0.1, wait=0.2+self.add_time)
+                           wait=0.4+self.add_time)
+                self.press(Button.A, duration=0.1, wait=0.4+self.add_time)
+                self.press(Direction.UP, duration=0.1, wait=0.4+self.add_time)
             else:
                 pass
             # 次の列へ移動
@@ -431,23 +431,23 @@ class SVAutoHatch(ImageProcPythonCommand):
 
         # 手持ち空き数に合わせて孵化用とほのおのからだポケモンを入れ替える
         if self.poke_cnt == 4:
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.LEFT, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.LEFT, duration=0.1, wait=0.4+self.add_time)
             self.press(Direction.DOWN, duration=0.2, wait=1+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.RIGHT, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.LEFT, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.RIGHT, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.LEFT, duration=0.1, wait=0.4+self.add_time)
             self.press(Direction.DOWN, duration=0.2, wait=1+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
         elif self.poke_cnt == 5:
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.LEFT, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.RIGHT, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
-            self.press(Direction.LEFT, duration=0.1, wait=0.2+self.add_time)
-            self.press(Button.Y, duration=0.1, wait=0.2+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.LEFT, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.RIGHT, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
+            self.press(Direction.LEFT, duration=0.1, wait=0.4+self.add_time)
+            self.press(Button.Y, duration=0.1, wait=0.4+self.add_time)
         else:
             pass
         # 次タマゴを入れるBOXに合わせて閉じる
